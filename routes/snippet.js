@@ -1,23 +1,72 @@
 
-// const Validator = require('../validator');
-const Joi = require('@hapi/joi');
+"use strict"
+
+const Validator = require('../validator');
 
 
 module.exports = function () {;
     return [
         {
             method: 'GET',
-            path: '/hello/{name}',
-            handler: function (request, h) {
-
-                return `Hello ${request.params.name}!`;
+            path: '/snippets',
+            options: {
+                tags: ['api']
+            },
+            handler: (request, h) => {
+                return [{
+                    id: 1,
+                    name: 'Email',
+                    body: `class EmailHandler:\n\tdef __init__(self):\n\t\tprint("Email Handler")`,
+                    tags: ['email']
+                }]
+            }
+        },
+        {
+            method: 'GET',
+            path: '/snippets/{id}',
+            handler: (request, h) => {
+                return {
+                    id: request.params.id,
+                    name: 'Email',
+                    body: `class EmailHandler:\n\tdef __init__(self):\n\t\tprint("Email Handler")`,
+                    tags: ['email']
+                }
             },
             options: {
+                tags: ['api'],
                 validate: {
-                    params: {
-                        name: Joi.string().min(3).max(10)
-                    }
+                    params: Validator.snippet.read
                 }
+            }
+        },
+        {
+            method: 'POST',
+            path: '/snippets',
+            handler: (request, h) => {
+            },
+            options: {
+                tags: ['api'],
+                validate: Validator.snippet.wx
+            }
+        },
+        {
+            method: 'DELETE',
+            path: '/snippets/{id}',
+            handler: (request, h) => {
+            },
+            options: {
+                tags: ['api'],
+                validate: Validator.snippet.rx
+            }
+        },
+        {
+            method: 'PUT',
+            path: '/snippets/{id}',
+            handler: (request, h) => {
+            },
+            options: {
+                tags: ['api'],
+                validate: Validator.snippet.rxwx
             }
         }
     ]
